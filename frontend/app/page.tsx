@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 
 import { Upload, Brain, Download, CheckCircle } from "lucide-react";
@@ -29,12 +30,12 @@ export default function HomePage() {
             professionals preparing for exams.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <GetStarted />
+            <GetStarted />
             <Link href="/about">
               <Button
                 size="lg"
                 className="text-lg px-8 py-3 bg-zinc-50 text-gray-900 border border-gray-300 hover:bg-gray-100"
-                >
+              >
                 Learn More
               </Button>
             </Link>
