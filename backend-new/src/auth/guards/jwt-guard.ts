@@ -1,20 +1,19 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
-  ForbiddenException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import type { Request } from 'express';
-import { JwtPayload } from '../interfaces';
 import { UsersService } from 'src/users/users.service';
+import { JwtPayload } from '../interfaces';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
-
     private readonly userService: UsersService,
   ) {}
 
@@ -31,27 +30,26 @@ export class AuthGuard implements CanActivate {
         secret: process.env.JWT_SECRET || 'secretkey',
       });
 
-      console.log('payload', payload);
-
-      if (!payload || !payload) {
+      if (!payload?.sub) {
         throw new ForbiddenException('Invalid token payload');
       }
-      console.log('payload', payload);
-      const user = await this.userService.findById(payload.sub!);
+
+      const user = await this.userService.findById(payload.sub);
 
       if (!user) {
-        throw new UnauthorizedException('Invalid token');
+        throw new UnauthorizedException('User not found');
       }
-    } catch {
+
+      (request as any).user = user;
+
+      return true;
+    } catch (error) {
       throw new ForbiddenException('Invalid or expired token');
     }
-    console.log(request);
-
-    return true;
   }
 
   private extractToken(request: Request): string | undefined {
-    const authHeader = request.headers.authorization;
+    const authHeader = request.headers?.authorization;
     if (!authHeader) return undefined;
 
     const [type, token] = authHeader.split(' ');

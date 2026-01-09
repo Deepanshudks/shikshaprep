@@ -4,10 +4,10 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
-import { Authconstants } from './auth/constants';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
-import { TestModule } from './test/test.module';
+import { TestModule } from './tests/test.module';
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
@@ -21,6 +21,7 @@ import { TestModule } from './test/test.module';
     AuthModule,
     UsersModule,
     TestModule,
+    UploadsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
